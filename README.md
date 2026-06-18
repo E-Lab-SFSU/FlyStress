@@ -26,3 +26,6 @@ Reads temperature data and displays live feed in a small window. Saves data in c
 # ST + MPU + Recording
 **shakeT-and-MPUacc.py**
 Performs shake test and reads + displays data from MPU. Saves data in csv file.
+
+**FS-SDR-S.py**
+Performs ST and records when a camera is attached to the pi. Can change ST settings. Data saved in csv file + displayed in small window.
