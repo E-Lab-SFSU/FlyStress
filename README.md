@@ -23,7 +23,10 @@ Reads accelerometer + gyroscope data and displays live feed in a small window. S
 **mpu6050-read-temp.py**
 Reads temperature data and displays live feed in a small window. Saves data in csv file.
 
-# ST + MPU + Recording
+# Shake Test (ST) + MPU + Recording
+**shake_test_keith.py**
+Moves Ender 3 printer bed along y axis rapidly to perform a ST.
+
 **shakeT-and-MPUacc.py**
 Performs shake test and reads + displays data from MPU. Saves data in csv file.
 
