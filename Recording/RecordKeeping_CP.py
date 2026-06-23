@@ -30,11 +30,14 @@ import platform
 import shutil
 import subprocess
 import sys
+import cv2
 import time
 from pathlib import Path
 
+# operating functions
+
 # creates a file for each video to be saved and stored in specific folder
-def next_recording_path(folder: Path, prefix: str = "comp_record_", suffix: str = ".mp4") -> Path:
+def next_recording_path(folder: Path, prefix: str = "comp_record_", suffix: str = ".avi") -> Path:
     folder.mkdir(parents=True, exist_ok=True)
     index = 0
     while True:
@@ -43,11 +46,35 @@ def next_recording_path(folder: Path, prefix: str = "comp_record_", suffix: str 
             return candidate
         index += 1
 
+# measures the FPS of the camera being used
+def measure_camera_fps(camera_index=0, test_duration=2):
+    cap = cv2.VideoCapture(camera_index)
+
+    if not cap.isOpened():
+        raise RuntimeError(f"Could not open camera {camera_index}")
+
+    frames = 0
+    start_time = time.time()
+
+    while (time.time() - start_time) < test_duration:
+        ret, frame = cap.read()
+
+        if ret:
+            frames += 1
+
+    elapsed = time.time() - start_time
+
+    cap.release()
+
+    fps = frames / elapsed
+
+    return fps
+
 # gets input from user for duration of video
 def ask_duration() -> float:
     while True:
         try:
-            duration = float(input("Enter Duration (s): ")).strip()
+            duration = float(input("Enter Duration (s): ").strip())
 
             if duration <= 0:
                 raise ValueError
@@ -66,12 +93,12 @@ def detect_opencv_backend():
 
 # if opencv is detected, it is then used to record video
 # change FPS here
-def record_with_opencv(duration: float, output_path: Path, camera_index: int = 0, fps: float = 30.0) -> None:
+def record_with_opencv(duration: float, output_path: Path, camera_index: int = 0, fps: float = 9.1) -> None:
     try:
         import cv2
     except ImportError as exc:
         raise RuntimeError(
-            "OpenCV is not installed. Install it with: python -m pip install opencv-python"
+            "OpenCV is not installed in your directory. Install it with: python -m pip install opencv-python"
         ) from exc
 
     backend_name = detect_opencv_backend()
@@ -99,12 +126,12 @@ def record_with_opencv(duration: float, output_path: Path, camera_index: int = 0
         width, height = 640, 480
 
     # mp4v is broadly supported by OpenCV across Windows/macOS/Linux.
-    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+    fourcc = cv2.VideoWriter_fourcc(*"MJPG")
     writer = cv2.VideoWriter(str(output_path), fourcc, fps, (width, height))
 
     if not writer.isOpened():
         cap.release()
-        raise RuntimeError("Could not create video writer for MP4 output.")
+        raise RuntimeError("Could not create video writer for MJPG output.")
 
     print(f"Recording to: {output_path}")
     print("Press Ctrl+C to stop early.")
@@ -113,12 +140,23 @@ def record_with_opencv(duration: float, output_path: Path, camera_index: int = 0
     frames = 0
 
     try:
+        frame_interval = 1.0 / fps
+        next_frame_time = time.time()
+
         while time.time() - start < duration:
+            now = time.time()
+
+            if now < next_frame_time:
+                time.sleep(next_frame_time - now)
+
             ok, frame = cap.read()
             if not ok:
-                raise RuntimeError("Camera stopped returning frames.")
+                print("Warning: dropped frame")
+                continue
+
             writer.write(frame)
             frames += 1
+            next_frame_time += frame_interval
     except KeyboardInterrupt:
         print("Stopped early by user.")
     finally:
@@ -135,7 +173,7 @@ def find_pi_camera_command() -> str | None:
     return None
 
 # record if opencv is not detected
-def record_with_pi_camera(duration: float, output_path: Path, width: int = 1280, height: int = 720) -> None:
+def record_with_pi_camera(duration: float, output_path: Path, width: int = 1280, height: int = 800) -> None:
     cmd_name = find_pi_camera_command()
     if cmd_name is None:
         raise RuntimeError(
@@ -161,7 +199,7 @@ def record_with_pi_camera(duration: float, output_path: Path, width: int = 1280,
     # change FPS here
     if shutil.which("ffmpeg"):
         subprocess.run([
-            "ffmpeg", "-y", "-framerate", "30", "-i", str(temp_h264),
+            "ffmpeg", "-y", "-framerate", "100", "-i", str(temp_h264),
             "-c", "copy", str(output_path)
         ], check=True)
         try:
@@ -174,19 +212,27 @@ def record_with_pi_camera(duration: float, output_path: Path, width: int = 1280,
 
 
 def main() -> int:
+
     # change FPS here
     parser = argparse.ArgumentParser(description="Record Keeping")
     parser.add_argument("--duration", type=float, help="Enter duration (s)")
     parser.add_argument("--camera", type=int, default=0, help="OpenCV camera index, default 0")
-    parser.add_argument("--fps", type=float, default=30.0, help="Frames per second (FPS) for recording")
+    parser.add_argument("--fps", type=float, default=9.1, help="Frames per second (FPS) for recording")
     parser.add_argument(
         "--mode",
         choices=["opencv", "pi-camera"],
         default="opencv",
         help="Use opencv for USB/built-in webcams; use pi-camera for Raspberry Pi CSI/ribbon camera",
     )
-    parser.add_argument("--folder", default="FS-recordings", help="Output folder")
+    parser.add_argument(
+        "--folder",
+        default=r"C:\Users\chana\Videos\FS-recordings",
+        help="Output folder"
+    )
     args = parser.parse_args()
+
+    if args.mode == "pi-camera":
+        args.fps = 100
 
     duration = args.duration if args.duration is not None else ask_duration()
     if duration <= 0:
