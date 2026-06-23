@@ -2,7 +2,7 @@
 """
 FlyStress GUI
  Author: Cherese Jordan
- Purpose: Easy interface to use multiple programs
+ Purpose: Easy interface to use multiple programs on Raspberry Pi 5
  - execute shake test (created by Keith Curry)
  - read and store data from MPU-6050 accelerometer
  - create line plot graphs that display the amount of forced used during a shake test
