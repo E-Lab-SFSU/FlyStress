@@ -18,10 +18,10 @@ GUI used for Fly Stress experiments.
 Separate programs specifically for reading data from MPU6050 sensor.
 
 **mpu6050-read-acc.py**
-Reads accelerometer + gyroscope data and displays live feed in a small window. Saves data in csv file.
+Reads accelerometer + gyroscope data and displays live feed in a small window. Saves data with timestamps in csv file.
 
 **mpu6050-read-temp.py**
-Reads temperature data and displays live feed in a small window. Saves data in csv file.
+Reads temperature data and displays live feed in a small window. Saves data with timestamps  in csv file.
 
 # Shake Test (ST) + MPU + Recording
 **shake_test_keith.py**
