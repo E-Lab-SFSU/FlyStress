@@ -32,3 +32,12 @@ Performs shake test and reads + displays data from MPU. Saves data in csv file.
 
 **FS-SDR-S.py**
 Performs ST and records when a camera is attached to the pi. Can change ST settings. Data saved in csv file + displayed in small window.
+
+# Recording
+Programs to record on multiple devices with different camera types.
+
+**RecordKeeping.py**
+Records on Raspberry pi 5.
+
+**RecordKeeping_CP.py**
+Records on Windows, Mac, Linux, and Raspberry pi 5.
