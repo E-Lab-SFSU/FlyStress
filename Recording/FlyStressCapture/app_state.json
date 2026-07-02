@@ -1,0 +1,21 @@
+{
+    "experiment_name": "test",
+    "exposure": 100000,
+    "fps": 5,
+    "gain": 50,
+    "gamma": 100,
+    "height": 1080,
+    "hours": 0,
+    "minutes": 10,
+    "notes": "poop",
+    "output_dir": "/home/admin/Desktop/VideosA",
+    "screenshot_format": "PNG",
+    "seconds": 0,
+    "selected_preset": "",
+    "timed": false,
+    "video_format": "AVI MJPEG",
+    "wb_b": 128,
+    "wb_g": 128,
+    "wb_r": 128,
+    "width": 1920
+}
