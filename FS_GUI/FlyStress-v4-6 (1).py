@@ -10,7 +10,7 @@ FlyStress GUI
  - create boxplot to show min force, max force, average force
  - record videos that can then be analyzed using tracking too (created by Devin Kelly) 
  
- For new devices, install: customtkinter, matplotlib, pyserial, smbus2, v4l2, ffmmpeg
+ For File_Search_CJ.py devices, install: customtkinter, matplotlib, pyserial, smbus2, v4l2, ffmmpeg
 
 Raspberry Pi, In terminal : cd Desktop
                source flystress-env/bin/activate
@@ -681,7 +681,7 @@ class FlyStressApp:
             "The shake test begins with an 11 second calibration phase. Use the 'extract time frame' tool to exclude this data from analysis.\n\n"
             "The accelerometer (MPU 6050) range will need to be adjusted given the amount of force used. When changing the settings,\n the range will be changed to the estimated best fit, but you can override this.\nIf the range is too low, the data will clip at the max g-force and show a flat line. If the range is too high, the data will be very\nlow resolution and look choppy.\n\n"
             "The live plot graph showcases the amount of force being used.\n\n" \
-            "Extracting a time frame from a .csv file will create a new file.\n\n",
+            "Extracting a time frame from a .csv file will create a File_Search_CJ.py file.\n\n",
             self.NORMAL_FONT
         ).pack()
 

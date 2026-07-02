@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 """
-Record Keeping Cross Platform (CP)
+Record Keeping GUI
 Author: Cherese Jordan
 Records video with multiple devices and cameras.
 Can record with Windows, Mac, Linux, and Raspberry Pi 5
 
 Current Features:
-- takes input for desired duration of video in terminal
-- creates a folder for recordings
-- different modes that use Open Cv, rpicam or libcam to record based on what
-    camera is being used
-- records video, stored in FS-recordings folder
+- record video with connected cameras
+- takes input for desired duration (optional)
+- creates a folder for recordings (VideoA)
+- Save MP4 or MJPG (avi) video
+-
 
 Future:
-Use matlab to create small GUI
+Improve Resolution of Camera
 
 Notes:
     If video is too fast, reduce default fps and vice versa
